@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.angular/
+**/.terraform/
+**/*.tfstate*
+**/cypress/videos/
+**/cypress/screenshots/
+.env
+**/.env
+**/output.json
+**/dataset.zip
+**/TestResults/
+.vs/
+.idea/

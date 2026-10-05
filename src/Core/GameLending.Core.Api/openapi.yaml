@@ -1,0 +1,1394 @@
+openapi: 3.1.1
+info:
+  title: GameLending Core
+  description: Gerenciamento de empréstimos de jogos.
+  version: v1
+paths:
+  /api/v1/friends:
+    get:
+      tags:
+      - Friends
+      description: 'Permissões exigidas (scope e role): friends.read'
+      parameters:
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: includeInactive
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FriendViewPage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendViewPage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FriendViewPage'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+      - Friends
+      description: 'Permissões exigidas (scope e role): friends.write'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/friends/{id}:
+    get:
+      tags:
+      - Friends
+      description: 'Permissões exigidas (scope e role): friends.read'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+      - Friends
+      description: 'Permissões exigidas (scope e role): friends.write'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SaveFriend'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FriendView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+      - Friends
+      description: 'Permissões exigidas (scope e role): friends.write'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/games:
+    get:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.read'
+      parameters:
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      - name: includeInactive
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.write'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/games/available:
+    get:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.read'
+      parameters:
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GameViewPage'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/games/{id}:
+    get:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.read'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    put:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.write'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/SaveGame'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GameView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    delete:
+      tags:
+      - Games
+      description: 'Permissões exigidas (scope e role): games.write'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/loans:
+    get:
+      tags:
+      - Loans
+      description: 'Permissões exigidas (scope e role): loans.read'
+      parameters:
+      - name: friendId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: gameId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: gameIds
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      tags:
+      - Loans
+      description: 'Permissões exigidas (scope e role): loans.write'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/loans/active:
+    get:
+      tags:
+      - Loans
+      description: 'Permissões exigidas (scope e role): loans.read'
+      parameters:
+      - name: friendId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: gameId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: gameIds
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoanViewPage'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/loans/{id}:
+    get:
+      tags:
+      - Loans
+      description: 'Permissões exigidas (scope e role): loans.read'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/loans/{id}/return:
+    post:
+      tags:
+      - Loans
+      description: 'Permissões exigidas (scope e role): loans.write'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/LoanView'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /api/v1/statistics:
+    get:
+      tags:
+      - Statistics
+      description: 'Permissões exigidas (scope e role): games.read, friends.read,
+        loans.read'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Token ausente ou inválido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /health/live:
+    get:
+      summary: Verifica se o processo está ativo
+      responses:
+        '200':
+          description: Healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+        '503':
+          description: Unhealthy
+      security: []
+  /health/ready:
+    get:
+      summary: Verifica prontidão do serviço
+      responses:
+        '200':
+          description: Healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+        '503':
+          description: Unhealthy
+      security: []
+components:
+  schemas:
+    CreateLoan:
+      type: object
+      properties:
+        gameId:
+          type: string
+          format: uuid
+        friendId:
+          type: string
+          format: uuid
+      additionalProperties: false
+    FriendView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type:
+          - 'null'
+          - string
+        email:
+          type:
+          - 'null'
+          - string
+        isActive:
+          type: boolean
+      additionalProperties: false
+    FriendViewPage:
+      type: object
+      properties:
+        items:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/FriendView'
+        total:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    GameView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type:
+          - 'null'
+          - string
+        platforms:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+        isActive:
+          type: boolean
+        status:
+          type:
+          - 'null'
+          - string
+        loanId:
+          type:
+          - 'null'
+          - string
+          format: uuid
+        friendId:
+          type:
+          - 'null'
+          - string
+          format: uuid
+        friendName:
+          type:
+          - 'null'
+          - string
+      additionalProperties: false
+    GameViewPage:
+      type: object
+      properties:
+        items:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/GameView'
+        total:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    LoanView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        gameId:
+          type: string
+          format: uuid
+        gameTitle:
+          type:
+          - 'null'
+          - string
+        friendId:
+          type: string
+          format: uuid
+        friendName:
+          type:
+          - 'null'
+          - string
+        loanedAt:
+          type: string
+          format: date-time
+        returnedAt:
+          type:
+          - 'null'
+          - string
+          format: date-time
+      additionalProperties: false
+    LoanViewPage:
+      type: object
+      properties:
+        items:
+          type:
+          - 'null'
+          - array
+          items:
+            $ref: '#/components/schemas/LoanView'
+        total:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - 'null'
+          - string
+        title:
+          type:
+          - 'null'
+          - string
+        status:
+          type:
+          - 'null'
+          - integer
+          format: int32
+        detail:
+          type:
+          - 'null'
+          - string
+        instance:
+          type:
+          - 'null'
+          - string
+      additionalProperties: {}
+    SaveFriend:
+      type: object
+      properties:
+        name:
+          type:
+          - 'null'
+          - string
+        email:
+          type:
+          - 'null'
+          - string
+      additionalProperties: false
+    SaveGame:
+      type: object
+      properties:
+        title:
+          type:
+          - 'null'
+          - string
+        platforms:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+      additionalProperties: false
+    Statistics:
+      type: object
+      properties:
+        totalGames:
+          type: integer
+          format: int32
+        availableGames:
+          type: integer
+          format: int32
+        borrowedGames:
+          type: integer
+          format: int32
+        totalFriends:
+          type: integer
+          format: int32
+        activeLoans:
+          type: integer
+          format: int32
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+- Bearer: []
+tags:
+- name: Friends
+- name: Games
+- name: Loans
+- name: Statistics
