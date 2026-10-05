@@ -1,0 +1,1 @@
+<Project Sdk="Microsoft.NET.Sdk"><ItemGroup><ProjectReference Include="../GameLending.Auth.Domain/GameLending.Auth.Domain.csproj" /></ItemGroup></Project>

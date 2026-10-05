@@ -1,0 +1,5 @@
+<div class="shell">
+  <header><a class="brand" routerLink="/dashboard"><span class="brand-icon">G</span><span>Game<span class="accent">Lending</span><small>SUA COLEÇÃO, SEM PERDER O CONTROLE</small></span></a>
+  @if(auth.token()){<nav aria-label="Navegação principal"><a routerLink="/dashboard" routerLinkActive="selected">Visão geral</a><a routerLink="/games" routerLinkActive="selected">Jogos</a><a routerLink="/friends" routerLinkActive="selected">Amigos</a><a routerLink="/loans" routerLinkActive="selected">Empréstimos</a></nav><button class="quiet" (click)="auth.logout()">Sair</button>}
+  </header><main><router-outlet /></main><footer>GameLending <span>Organize. Empreste. Jogue de novo.</span></footer>
+</div>

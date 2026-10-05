@@ -1,0 +1,259 @@
+openapi: 3.1.1
+info:
+  title: GameLending Auth
+  description: Gerenciamento de empréstimos de jogos.
+  version: v1
+paths:
+  /api/v1/auth/token:
+    post:
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientCredential'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/ClientCredential'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/ClientCredential'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      security: []
+  /api/v1/auth/validate:
+    get:
+      tags:
+      - Auth
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TokenValidationResponse'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '400':
+          description: Entrada inválida
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Recurso não encontrado
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflito de negócio
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Erro interno
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  /health/live:
+    get:
+      summary: Verifica se o processo está ativo
+      responses:
+        '200':
+          description: Healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+        '503':
+          description: Unhealthy
+      security: []
+  /health/ready:
+    get:
+      summary: Verifica prontidão do serviço
+      responses:
+        '200':
+          description: Healthy
+          content:
+            text/plain:
+              schema:
+                type: string
+        '503':
+          description: Unhealthy
+      security: []
+components:
+  schemas:
+    ClientCredential:
+      type: object
+      properties:
+        clientId:
+          type:
+          - 'null'
+          - string
+        clientSecret:
+          type:
+          - 'null'
+          - string
+        isWellFormed:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+          - 'null'
+          - string
+        title:
+          type:
+          - 'null'
+          - string
+        status:
+          type:
+          - 'null'
+          - integer
+          format: int32
+        detail:
+          type:
+          - 'null'
+          - string
+        instance:
+          type:
+          - 'null'
+          - string
+      additionalProperties: {}
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type:
+          - 'null'
+          - string
+        tokenType:
+          type:
+          - 'null'
+          - string
+        expiresIn:
+          type: integer
+          format: int32
+      additionalProperties: false
+    TokenValidationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        clientId:
+          type:
+          - 'null'
+          - string
+        expiration:
+          type: string
+          format: date-time
+        roles:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+        scopes:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+      additionalProperties: false
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+- Bearer: []
+tags:
+- name: Auth

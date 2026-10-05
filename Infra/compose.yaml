@@ -1,0 +1,98 @@
+name: game-lending
+x-api-environment: &api-environment
+  ASPNETCORE_ENVIRONMENT: Challenge
+  Jwt__Issuer: ${JWT_ISSUER:-GameLending.Auth}
+  Jwt__Audience: ${JWT_AUDIENCE:-GameLending}
+  Jwt__SigningKey: ${JWT_SIGNING_KEY:?Copy Infra/.env.example to Infra/.env and set JWT_SIGNING_KEY}
+  Jwt__ExpirationMinutes: ${JWT_EXPIRATION_MINUTES:-60}
+  Logging__LogLevel__Microsoft.AspNetCore: Warning
+x-api-health: &api-health
+  test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health/ready"]
+  interval: 10s
+  timeout: 5s
+  retries: 10
+  start_period: 20s
+services:
+  postgres:
+    image: postgres:17.6-bookworm
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-game_lending}
+      POSTGRES_USER: ${POSTGRES_USER:-game_lending}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+    restart: unless-stopped
+  pgadmin:
+    image: dpage/pgadmin4:9.8
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?Set PGADMIN_DEFAULT_PASSWORD}
+    ports: ["127.0.0.1:5050:80"]
+    volumes: ["pgadmin-data:/var/lib/pgadmin", "./pgadmin/servers.json:/pgadmin4/servers.json:ro"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: unless-stopped
+  db-migrate:
+    build: {context: .., dockerfile: src/Core/GameLending.Core.Api/Dockerfile}
+    environment:
+      <<: *api-environment
+      ConnectionStrings__Lending: Host=postgres;Database=${POSTGRES_DB:-game_lending};Username=${POSTGRES_USER:-game_lending};Password=${POSTGRES_PASSWORD}
+      CatalogImport__Enabled: "false"
+    command: ["--migrate"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    restart: "no"
+  auth-api:
+    build: {context: .., dockerfile: src/Auth/GameLending.Auth.Api/Dockerfile}
+    environment: *api-environment
+    ports: ["127.0.0.1:5002:8080"]
+    healthcheck: *api-health
+    restart: unless-stopped
+  core-api:
+    build: {context: .., dockerfile: src/Core/GameLending.Core.Api/Dockerfile}
+    environment:
+      <<: *api-environment
+      ConnectionStrings__Lending: Host=postgres;Database=${POSTGRES_DB:-game_lending};Username=${POSTGRES_USER:-game_lending};Password=${POSTGRES_PASSWORD}
+      CatalogImport__Path: /data/output.json
+      CatalogImport__BatchSize: 500
+      CatalogImport__Enabled: "true"
+    volumes: ["./postgres/seed:/data:ro"]
+    ports: ["127.0.0.1:5001:8080"]
+    depends_on:
+      db-migrate: {condition: service_completed_successfully}
+    healthcheck: *api-health
+    restart: unless-stopped
+  bff-api:
+    build: {context: .., dockerfile: src/Bff/GameLending.Bff.Api/Dockerfile}
+    environment:
+      <<: *api-environment
+      Services__Core: http://core-api:8080/api/v1/
+      Services__Auth: http://auth-api:8080/api/v1/
+      Web__Origin: http://localhost:4200
+    ports: ["127.0.0.1:5000:8080"]
+    depends_on:
+      core-api: {condition: service_healthy}
+      auth-api: {condition: service_healthy}
+    healthcheck: *api-health
+    restart: unless-stopped
+  web:
+    build: {context: .., dockerfile: src/Web/game-lending-web/Dockerfile}
+    ports: ["127.0.0.1:4200:80"]
+    depends_on:
+      bff-api: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "--quiet", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+networks:
+  default: {name: game-lending-network}
+volumes:
+  postgres-data:
+  pgadmin-data:
